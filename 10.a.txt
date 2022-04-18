@@ -1,0 +1,238 @@
+10a. Clases en Java
+
+
+ 
+
+
+ 
+
+Java
+10. Clases En Java.
+Cuando tenemos que realizar un proyecto grande, será necesario descomponerlo
+ en varios subprogramas, de forma que podamos repartir el trabajo entre varias
+ personas (pero la descomposición no debe ser arbitraria: por ejemplo,
+ será deseable que cada bloque tenga unas responsabilidades claras).
+
+La forma más recomendable de descomponer un proyecto será tratar de verlo
+ como una serie de "objetos" que colaboran entre ellos, cada uno de los 
+cuales tiene unas ciertas responsabilidades.
+
+Como ejemplo, vamos a dedicar un momento a pensar qué elementos ("objetos")
+ hay en un juego como el clásico Space Invaders:
+
+invaders
+
+De la pantalla anterior, se puede observar que nosotros manejamos una "nave",
+ que se esconde detrás de "torres defensivas", y que nos atacan (nos disparan) 
+"enemigos". Además, estos enemigos no se mueven de forma independiente,
+ sino como un "bloque". En concreto, hay cuatro "tipos" de enemigos,
+ que no se diferencian en su comportamiento, pero sí en su imagen.
+ También, aunque no se ve en la pantalla anterior, en ocasiones aparece
+ un "OVNI" en la parte superior de la pantalla, que nos permite obtener 
+puntuación extra. También hay un "marcador", que muestra la puntuación y el record.
+ Y antes y después de cada "partida", regresamos a una pantalla de "bienvenida",
+ que muestra una animación que nos informa de cuántos puntos obtenemos al destruir 
+cada tipo de enemigo.
+
+Para diseñar cómo descomponer el programa, se suele usar la ayuda de
+ "diagramas de clases", que muestran de una manera visual qué objetos
+ son los que interaccionan para, entre todos ellos, formar nuestro proyecto. 
+En el caso de nuestro "Space Invaders", un diagrama de clases simplificado 
+podría ser algo como:
+
+invaders, clases
+
+Algunos de los detalles que se pueden leer de ese diagrama son:
+
+La clase principal de nuestro proyecto se llama "Juego" 
+(el diagrama típicamente se leerá de arriba a abajo).
+El juego contiene una "Bienvenida" y una "Partida" (ese relación de 
+que un objeto "contiene" a otros se indica mediante un rombo en el extremo de la línea que une ambas clases, junto a la clase "contenedora").
+En una partida participan una "Nave", cuatro "Torres" defensivas,
+ un "BloqueDeEnemigos" formado por varios "Enemigos" (que, a su vez,
+ podrían ser de tres tipos distintos, pero no afinaremos tanto por ahora) 
+y un "Ovni".
+Tanto la "Nave" como las "Torres", los "Enemigos" y el "Ovni" son tipos
+ concretos de "Sprite" (esa relación entre un objeto más genérico y uno
+ más específico se indica con las puntas de flecha, que señalan al objeto más genérico).
+Un "Sprite" es una figura gráfica de las que aparecen en el juego.
+ Cada sprite tendrá detalles (atributos) como una "imagen" y una posición,
+ dada por sus coordenadas "x" e "y". Será capaz de hacer operaciones
+ (métodos) como "dibujarse" o "moverse" a una nueva posición.
+ Cuando se programa toda esta estructura de clases, 
+los atributos serán variables, mientras que los "métodos" serán funciones. 
+Los subtipos de sprite "heredarán" las características de esta clase. 
+Por ejemplo, como un Sprite tiene una coordenada X y una Y,
+ también lo tendrá el OVNI, que es una subclase de Sprite.
+El propio juego también tendrá métodos como "comprobarTeclas" 
+(para ver qué teclas ha pulsado el usuario), "moverElementos" 
+(para actualizar el movimiento de los elementos que deban moverse por ellos mismos),
+ "comprobarColisiones" (para ver si dos elementos chocan, como un disparo y un enemigo,
+ y actualizar el estado del juego según corresponda), o "dibujarElementos"
+ (para mostrar en pantalla todos los elementos actualizados).
+En este punto, podríamos empezar a repartir trabajo: una persona 
+se podría encargar de crear la pantalla de bienvenida, otra de la 
+lógica del juego, otra del movimiento de los enemigos, otra de las
+ peculiaridades de cada tipo de enemigo, otra del OVNI...
+
+Nosotros no vamos a hacer proyectos tan grandes (al menos, no todavía),
+ pero sí empezaremos a crear proyectos sencillos en los que colaboren 
+varias clases, que permitan sentar las bases para proyectos más complejos,
+ y también entender algunas peculiaridades de los temas que veremos a
+ continuación, como el manejo de ficheros en Java.
+
+10.2. Varias clases en Java
+En Java podemos definir varias clases dentro de un mismo fichero, 
+con la única condición de que sólo una de esas clases sea declarada 
+como "pública". En un caso general, lo más correcto será definir
+ cada clase en un fichero. Aun así, vamos a ver primero un ejemplo 
+que contenga dos clases en un solo fichero
+
+// DosClases.java
+// Primer ejemplo de una clase nuestra
+// que accede a otra también nuestra,
+// ambas definidas en el mismo fichero
+
+ 
+class Principal {
+ 
+  public static void main( String args[] ) {
+    Secundaria s = new Secundaria();
+ 
+    s.saluda(); // Saludo de "Secundaria"
+    saluda(); // Saludo de "Principal"
+  }
+ 
+  public static void saluda() {
+    System.out.println( "Saludando desde <Principal>" );
+  }
+ 
+}
+ 
+ 
+// ----------------------------------------------------
+ 
+class Secundaria {
+ 
+  public void saluda() {
+    System.out.println( "Saludando desde <Secundaria>" );
+  }
+ 
+}
+Como siempre, hay cosas que comentar:
+
+En este fuente hay dos clases, una llamada "Principal" y otra llamada "Secundaria".
+La clase "Secundaria" sólo tiene un método, llamado "saluda", mientras que la clase
+ "Principal" tiene dos métodos: "main" (el cuerpo de la aplicación) y otro llamado
+ "saluda", al igual que el de "Secundaria".
+Ambos métodos "saluda" se limitan a mostrar un mensaje en pantalla, que es distinto
+ en cada caso.
+En el método "main", hacemos 3 cosas:
+
+Primero definimos y creamos un objeto de la clase "Secundaria". Esto lo podríamos 
+conseguir en dos pasos, definiendo primero el objeto con "Secundaria s" y creando 
+después el objeto con "s = new Secundaria()", o bien podemos hacer ambas cosas en 
+un solo paso, como ya habíamos hecho con las variables sencillas.
+Después llamamos al método "saluda" de dicho objeto, con la expresión "s.saluda()"
+Finalmente, llamamos al método "saluda" de la propia clase "Principal", escribiendo solamente "saluda()".
+Para compilar este programa desde línea de comandos, teclearíamos, como siempre:
+
+javac DosClases.java
+y entonces se crearían dos ficheros llamados
+
+Principal.class
+Secundaria.class
+que podríamos probar tecleando
+
+java Principal
+El resultado se mostraría en pantalla es:
+
+Saludando desde <Principal>
+Saludando desde <Secundaria>
+Si usamos Geany como editor, nos interesará que el propio programa se llame Principal.java,
+ igual que la que va a ser la clase que habrá que ejecutar posteriormente; de lo contrario,
+ cuando pidamos lanzar el programa, se buscaría un fichero DosClases.class 
+(porque nuestro fuente era DosClases.java), pero ese fichero no existe...
+
+Ahora vamos a ver un ejemplo en el que las dos clases están en dos ficheros distintos.
+ Tendremos una clase "sumador" que sea capaz de sumar dos números 
+(no es gran cosa, sabemos hacerlo sin necesidad de crear "clases a propósito",
+ pero nos servirá como ejemplo) y tendremos también un programa principal que la utilice.
+
+La clase "Sumador", con un único método "calcularSuma", que acepte dos números enteros 
+y devuelva otro número entero, sería:
+
+// Sumador.java
+// Segundo ejemplo de una clase nuestra
+//   que accede a otra tambi?n nuestra.
+//   Esta es la clase auxiliar, llamada
+
+ 
+class Sumador {
+ 
+    public int calcularSuma( int a, int b ) {
+       return a+b;
+    }
+}
+Por otra parte, la clase "UsaSumador" emplearía un objeto de la clase "Sumador",
+ llamado "suma", desde su método "main", así:
+
+// UsaSumador.java
+// Segundo ejemplo de una clase nuestra
+//   que accede a otra tambi?n nuestra.
+//   Esta es la clase principal, que
+
+ 
+class UsaSumador {
+ 
+    public static void main( String args[] ) {
+ 
+       Sumador suma = new Sumador();
+ 
+       System.out.println( "La suma de 30 y 55 es" );
+       System.out.println( suma.calcularSuma (30,55) );
+    }
+ 
+}
+Para compilar estos dos fuentes desde línea de comandos, si tecleamos directamente
+
+javac usaSumador.java
+recibiríamos como respuesta un mensaje de error que nos diría que no existe la clase Sumador:
+
+UsaSumador.java:13: Class Sumador not found.
+Sumador suma = new Sumador();
+^
+UsaSumador.java:13: Class Sumador not found.
+Sumador suma = new Sumador();
+^
+2 errors
+La forma correcta sería compilar primero "Sumador" y después "UsaSumador", 
+para después ya poder probar el resultado:
+
+javac Sumador.java
+javac UsaSumador.java
+java UsaSumador
+La respuesta, como es de esperar, sería:
+
+La suma de 30 y 55 es
+85
+Si usamos como entorno NetBeans, también podemos crear programas formados por varios fuentes. 
+Los pasos serían los siguientes:
+
+Crear un proyecto nuevo (menú "Archivo", opción "Proyecto nuevo")
+Indicar que ese proyecto es una "Aplicación Java".
+Elegir un nombre para esa aplicación (por ejemplo, "EjemploSumador"), y, si queremos, 
+una carpeta (se nos propondrá la carpeta de proyectos de NetBeans).
+Añadir una segunda clase a nuestra aplicación (menú "Archivo", opción "Archivo Nuevo").
+ Escogeremos que ese archivo esté dentro de nuestro proyecto actual ("EjemploSumador")
+ y que sea una "Clase Java". Después se nos preguntará el nombre que deseamos para la clase 
+(por ejemplo "Sumador").
+Entonces completaremos el código que corresponde a ambas clases, preferiblemente empezando 
+por las clases que son necesitadas por otras (en nuestro caso, haríamos "Sumador" antes que
+ "EjemploSumador").
+Finalmente, haremos clic en el botón de "Ejecutar" nuestro proyecto, para comprobar el resultado.
+Ejercicio propuesto 10.2.1: Crea una clase "LectorTeclado", para simplificar la lectura de datos
+ desde teclado. Esta clase tendrá un método "pedir", que recibirá como parámetro el texto 
+de aviso que se debe mostrar al usuario, y que devolverá la cadena de texto introducida
+ por el usuario (o una cadena vacía en caso de error). Crea también una clase "PruebaTeclado",
+ que use la anterior.

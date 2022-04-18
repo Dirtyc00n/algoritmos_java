@@ -1,0 +1,30 @@
+package javaapplication512;
+
+/**
+ *
+ * @author SantoTomas
+ */
+import java.util.Scanner;
+
+public class JavaApplication512 {
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String[] args) {
+        Scanner teclado;
+        teclado = new Scanner(System.in);
+        int x;
+        x = teclado.nextInt();
+        
+        if (x ==12){
+            System.out.println("El numero ingresado es correcto");
+        }
+        else {
+            System.out.println("El numero ingresado es incorrecto");
+            
+        }
+        // TODO code application logic here
+    }
+    
+}

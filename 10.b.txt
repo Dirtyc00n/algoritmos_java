@@ -1,0 +1,341 @@
+10b. Herencia, polimorfismo y ocultación de detalles
+ 
+ Curso: Programación en Java
+ 
+
+
+ 
+
+Java
+10.3. Herencia
+Hemos comentado que unas clases podían "heredar" atributos y métodos de otras clases.
+ Vamos a ver cómo se refleja eso en un programa. Crearemos un "escritor de textos"
+ y después lo mejoraremos creando un segundo escritor que sea capaz además de 
+"adornar" los textos poniendo asteriscos antes y después de ellos. Finalmente,
+ crearemos un tipo de escritor que sólo escriba en mayúsculas...
+
+// Herencia.java
+// Primer ejemplo de herencia entre clases,
+//   todas definidas en el mismo fichero
+
+ 
+
+
+
+
+
+class Escritor {
+  public static void escribe(String texto) {
+   System.out.println( texto );
+  }
+}
+ 
+ 
+class EscritorAmpliado extends Escritor {
+  public static void escribeConAsteriscos(String texto) {
+    escribe( "**" + texto + "**" );
+  }
+}
+ 
+ 
+class EscritorMayusculas extends Escritor {
+  public static void escribe(String texto) {
+    Escritor.escribe( texto.toUpperCase() );
+  }
+}
+ 
+ 
+// ----------------------------------------------------
+ 
+class Herencia {
+ 
+  public static void main( String args[] ) {
+ 
+    Escritor e = new Escritor();
+    EscritorAmpliado eAmp = new EscritorAmpliado();
+    EscritorMayusculas eMays = new EscritorMayusculas();
+ 
+    e.escribe("El primer escritor sabe escribir");
+    eAmp.escribe("El segundo escritor también");
+    eAmp.escribeConAsteriscos("y rodear con asteriscos");
+    eMays.escribe("El tercero sólo escribe en mayúsculas");
+  }
+ 
+}
+Veamos qué hemos hecho:
+
+Creamos una primera clase de objetos. La llamamos "Escritor" y sólo sabe hacer una cosa:
+ escribir. Mostrará en pantalla el texto que le indiquemos, usando su método "escribe".
+Después creamos una clase que amplía las posibilidades de ésta. Se llama "EscritorAmpliado"
+, y se basa (extends) en Escritor. Como "hereda" las características de un Escritor, 
+también "sabrá escribir" usando el método "escribe", sin necesidad de que se lo volvamos a decir.
+De hecho, también le hemos añadido una nueva posibilidad (la de "escribir con asteriscos"),
+ y al definirla podemos usar "escribe" sin ningún problema, aprovechando que un 
+EscritorAmpliado es un tipo de Escritor.
+Después creamos una tercera clase, que en vez de ampliar las posibilidades de "Escritor" 
+lo que hace es basarse (extends) en ella pero cambiando el comportamiento 
+(sólo escribirá en mayúsculas). En este caso, no añadimos nada, sino que reescribimos 
+el método "escribe", para indicarle que debe hacer cosas distintas (esto es lo que se
+ conoce como polimorfismo: el mismo nombre para dos elementos distintos -en este caso
+ dos funciones-, cuyos comportamientos no son iguales). Para rizar el rizo, en el nuevo
+ método "escribe" no usamos el típico "System.out.println" (lo podíamos haber hecho 
+perfectamente), sino que nos apoyamos en el método "escribe" que acabábamos de definir
+ para la clase "Escritor".
+
+
+Finalmente, en "main", creamos un objeto de cada clase (usando la palabra "new" y los probamos.
+El resultado de este programa es el siguiente:
+
+El primer escritor sabe escribir
+El segundo escritor también
+**y rodear con asteriscos**
+EL TERCERO SÓLO ESCRIBE EN MAYÚSCULAS
+Ejercicio propuesto 10.3.1: Crea una nueva clase "EscritorMayusculasEspaciado" que
+ se apoye en "EscritorMayusculas", pero reemplace cada espacio en blanco por tres
+ espacios antes de escribir en pantalla.
+
+10.4. Ocultación de detalles
+En general, será deseable que los detalles internos (los "atributos", las variables)
+ de una clase no sean accesibles desde el exterior. En vez de hacerlos públicos,
+ usaremos "métodos" (funciones) para acceder a su valor y para cambiarlo.
+
+Esta forma de trabajar tiene como ventaja que podremos cambiar los detalles internos 
+de nuestra clase (para hacerla más rápida o que ocupe menos memoria, por ejemplo)
+ sin que afecte a los usuarios de nuestra clase, que la seguirán manejando "como 
+siempre", porque su parte visible sigue siendo la misma.
+
+De hecho, podremos distinguir tres niveles de visibilidad:
+
+Público (public), para métodos o atributos que deberán ser visibles. En general,
+ las funciones que se deban poder utilizar desde otras clases serán visible,
+ mientras que procuraremos que los estén ocultos.
+Privado (privado), para lo que no deba ser accesible desde otras clases, como 
+los atributos o algunas funciones auxiliares.
+Protegido (protected), que es un caso intermedio: si declaramos un atributo 
+como privado, no será accesible desde otras clases, ni siquiera las que heredan
+ de la clase actual. Pero generalmente será preferible que las clases "hijas"
+ de la actual sí puedan acceder a los atributos que están heredando de ella.
+ Por eso, es habitual declarar los atributos como "protected", que equivale a decir 
+"será privado para todas las demás clases, excepto para las que hereden de mí".
+Un ejemplo sería
+
+// Getters.java
+// Segundo ejemplo de herencia entre clases,
+//   todas definidas en el mismo fichero
+// Incluye getters y setters
+
+
+ 
+class Escritor {
+    public static void escribe(String texto) {
+        System.out.println( texto );
+    }
+}
+ 
+ 
+class EscritorMargen extends Escritor {
+    static byte margen = 0;
+ 
+    public static void escribe(String texto) {
+        for (int i=0; i < margen; i++)
+            System.out.print(" ");
+        System.out.println( texto  );
+    }
+ 
+    public static int getMargen() {
+        return margen;
+    }
+ 
+    public static void setMargen(int nuevoMargen) {
+        margen = (byte) nuevoMargen;
+    }
+}
+ 
+ 
+ 
+ 
+// ----------------------------------------------------
+ 
+class Getters {
+ 
+  public static void main( String args[] ) {
+ 
+    Escritor e = new Escritor();
+    EscritorMargen e2 = new EscritorMargen();
+ 
+    e.escribe("El primer escritor sabe escribir");
+    e2.setMargen( 5 );
+    e2.escribe("El segundo escritor también, con margen");
+  }
+ 
+}
+ 
+
+Ejercicio propuesto 10.4.1: Crea una nueva clase "EscritorDosMargenes" que se base en
+ "EscritorMargen", añadiéndole un margen derecho. Si el texto supera el margen derecho
+ (suponiendo 80 columnas de anchura de pantalla), deberá continuar en la línea siguiente.
+
+10.5. Sin "static"
+Hasta ahora, siempre hemos incluido la palabra "static" antes de cada función,
+ e incluso de los atributos. Realmente, esto no es necesario. Ahora que ya 
+sabemos lo que son las clases y cómo se definen los objetos que pertenecen a
+ una cierta clase, podemos afinar un poco más:
+
+La palabra "static" se usa para indicar que un método o un atributo es 
+igual para todos los objetos de una clase. Pero esto es algo que casi no 
+ocurre en "el mundo real". Por ejemplo, podríamos suponer que el atributo
+ "cantidadDeRuedas" de una clase "coche" podría ser "static", y tener el 
+valor 4 para todos los coches... pero en el mundo real existe algún
+ coche de 3 ruedas, así como limusinas con más de 4 ruedas. Por eso,
+ habíamos usado "static" cuando todavía no sabíamos nada sobre clases,
+ pero prácticamente ya no lo volveremos a usar a partir de ahora,
+ que crearemos objetos usando la palabra "new".
+
+Podemos reescribir el ejemplo anterior sin usar "static", así
+
+// Getters2.java
+// Segundo ejemplo de herencia entre clases,
+//   todas definidas en el mismo fichero
+// Incluye getters y setters
+// Versión sin "static"
+
+
+
+ 
+class Escritor {
+    public void escribe(String texto) {
+        System.out.println( texto );
+    }
+}
+ 
+ 
+class EscritorMargen extends Escritor {
+    byte margen = 0;
+ 
+    public void escribe(String texto) {
+        for (int i=0; i < margen; i++)
+            System.out.print(" ");
+        System.out.println( texto  );
+    }
+ 
+    public int getMargen() {
+        return margen;
+    }
+ 
+    public void setMargen(int nuevoMargen) {
+        margen = (byte) nuevoMargen;
+    }
+}
+ 
+ 
+ 
+// ----------------------------------------------------
+ 
+class Getters2 {
+ 
+  public static void main( String args[] ) {
+ 
+    Escritor e = new Escritor();
+    EscritorMargen e2 = new EscritorMargen();
+ 
+    e.escribe("El primer escritor sabe escribir");
+    e2.setMargen( 5 );
+    e2.escribe("El segundo escritor también, con margen");
+  }
+ 
+}
+ 
+
+Ejercicio propuesto 10.5.1: Crea una versión del ejercicio 10.4.1, que no utilice "static".
+
+10.6. Constructores
+Nos puede interesar dar valores iniciales a los atributos de una clase. 
+Una forma de hacerlo es crear un método (una función) llamado "Inicializar", 
+que sea llamado cada vez que creamos un objeto de esa clase. Pero esto es algo 
+tan habitual que ya está previsto en la mayoría de lenguajes de programación 
+actuales: podremos crear "constructores", que se lanzarán automáticamente al 
+crear el objeto. La forma de definirlos es con una función que se llamará igual
+ que la clase, que no tendrá ningún tipo devuelto (ni siquiera "void")
+ y que puede recibir parámetros. De hecho, podemos incluso crear varios 
+constructores alternativos, con distinto número o tipo de parámetros:
+
+// Constructores.java
+// Ejemplo de clases con constructores
+
+
+
+
+
+class Escritor {
+    protected String texto;
+ 
+    public Escritor(String nuevoTexto) {
+        texto = nuevoTexto;
+    }
+ 
+    public Escritor() {
+        texto = "";
+    }
+ 
+    public String getTexto() {
+        return texto;
+    }
+ 
+    public void setTexto(String nuevoTexto) {
+        texto = nuevoTexto;
+    }
+ 
+    public void escribe() {
+        System.out.println( texto );
+    }
+}
+ 
+ 
+class EscritorMargen extends Escritor {
+    byte margen = 0;
+ 
+    public EscritorMargen(String nuevoTexto) {
+        texto = nuevoTexto;
+    }
+ 
+    public void escribe() {
+        for (int i=0; i < margen; i++)
+            System.out.print(" ");
+        System.out.println( texto  );
+    }
+ 
+    public int getMargen() {
+        return margen;
+    }
+ 
+    public void setMargen(int nuevoMargen) {
+        margen = (byte) nuevoMargen;
+    }
+}
+ 
+ 
+ 
+ 
+// ----------------------------------------------------
+ 
+class Constructores {
+ 
+    public static void main( String args[] ) {
+ 
+        Escritor e = new Escritor("Primer escritor");
+        EscritorMargen e2 =
+            new EscritorMargen("Segundo escritor");
+ 
+        e.escribe();
+        e2.setMargen( 5 );
+        e2.escribe();
+    }
+ 
+}
+También existen los "destructores", que se llamarían cuando un objeto deja de ser utilizado,
+ y se podrían aprovechar para cerrar ficheros, liberar memoria que hubiéramos reservado
+ nosotros de forma manual, etc., pero su uso es poco habitual para un principiante,
+ así que no los veremos por ahora.
+
+Ejercicio propuesto 10.6.1: Crea una nueva versión de la clase "EscritorDosMargenes" 
+que use un constructor para indicarle el texto, el margen izquierdo y el margen derecho.

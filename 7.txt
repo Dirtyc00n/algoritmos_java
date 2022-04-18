@@ -1,0 +1,424 @@
+7. Booleanos, caracteres, cadenas de texto
+
+
+
+
+Java
+7. Booleanos, Caracteres, Cadenas De Texto Y Arrays
+Hemos visto cómo manejar datos numéricos, tanto enteros como reales, y con mayor o menor precisión,
+ pero para muchos problemas reales necesitaremos datos de otros tipos: textos, datos estructurados 
+e incluso otros datos simples que aún no hemos tratado, como letras individuales y valores lógicos
+ "verdadero" o "falso".
+
+7.1 Datos booleanos
+Un dato "booleano" es uno que puede tener sólo dos valores posibles: verdadero (true) o falso 
+(false), que son los dos valores existentes en la "lógica de Boole", de la que toman su nombre.
+
+Es habitual utilizarlos para hacer que las condiciones complicadas resulten más legibles. 
+Un ejemplo de su uso podría ser:
+
+// Booleano1.java
+// Primer ejemplo de variables "bool"
+
+
+import java.util.Scanner;
+
+class Booleano1 {
+
+    public static void main( String args[] ) {
+
+        int dato;
+        boolean todoCorrecto;
+        Scanner teclado = new Scanner(System.in);
+
+        do
+        {
+            System.out.print("Introduce un dato del 0 al 10: ");
+            dato = teclado.nextInt();
+            todoCorrecto = true;
+
+            if (dato < 0)
+                todoCorrecto = false;
+
+            if (dato > 10)
+                todoCorrecto = false;
+
+            if ( ! todoCorrecto )
+                System.out.println("No es válido!");
+        }
+        while ( ! todoCorrecto );
+        System.out.println("Terminado!");
+    }
+}
+No es necesario usar un "if" para darles valores, sino que se puede hacer directamente
+ asignándoles el valor de una condición, así:
+
+// Booleano2.java
+// Segundo ejemplo de variables "bool"
+
+
+import java.util.Scanner;
+
+class Booleano2 {
+
+    public static void main( String args[] ) {
+
+        int dato;
+        boolean todoCorrecto;
+        Scanner teclado = new Scanner(System.in);
+
+        do
+        {
+            System.out.print("Introduce un dato del 0 al 10: ");
+            dato = teclado.nextInt();
+            todoCorrecto = (dato >= 0) && (dato <= 10);
+            if ( ! todoCorrecto )
+                System.out.println("No es válido!");
+        }
+        while ( ! todoCorrecto );
+        System.out.println("Terminado!");
+    }
+}
+Ejercicio propuesto 7.1.1: Crea un programa que pida al usuario un número entero y,
+ si es par, dé el valor "true" a una variable booleana llamada "esPar"; es caso contrario, 
+le dará el valor "false".
+
+7.2. Caracteres
+El tipo de datos char lo usaremos para almacenar una letra del alfabeto,
+ o un dígito numérico, o un símbolo de puntuación, o cualquier otro carácter.
+ Ocupa 2 bytes. Sigue un estándar llamado Unicode (que a su vez engloba a otro
+ estándar anterior llamado ASCII). Sus valores se deben indicar entre comillas
+ simples: char inicial = 'n';
+
+Por ejemplo, un programa que prefije dos datos de tipos "char" y los muestre sería
+
+// Char1.java
+// Segundo ejemplo de variables "bool"
+
+
+class Char1 {
+
+    public static void main( String args[] ) {
+
+        char letra1, letra2;
+
+        letra1 = 'a';
+        letra2 = 'b';
+
+        System.out.print("La primera letra es : ");
+        System.out.println(letra1);
+
+        System.out.print("La segunda letra es : ");
+        System.out.println(letra2);
+    }
+}
+Java no permite usar un "Scanner" para leer desde teclado letra a letra,
+ así que la mayoría de operaciones con letras las haremos dentro de poco,
+ cuando sepamos manejar cadenas de texto.
+
+7.3. Las cadenas de texto
+Una cadena de texto (en inglés, "string") es un conjunto de letras, 
+que usaremos para poder almacenar palabras y frases. Realmente en Java 
+hay dos "variantes" de las cadenas de texto: existe un tipo de datos
+ llamado "String" (con la primera letra en mayúsculas, al contrario 
+que los tipos de datos que habíamos visto hasta ahora) y otro tipo
+ de datos llamado "StringBuilder". Un "String" será una cadena de caracteres 
+constante, que no se podrá modificar (podremos leer su valor,
+ extraer parte de él, etc.; pero para cualquier modificación, 
+deberemos volcar los datos a una nueva cadena), mientras que un 
+"StringBuilder" se podrá modificar "con más facilidad"
+ (podremos insertar letras, dar la vuelta a su contenido, etc)
+ a cambio de ser ligeramente menos eficiente (más lento).
+
+7.3.1. String
+Las cadenas se declaran con la palabra "String" (cuidado: la primera letra debe
+ estar en mayúsculas) y su valor se asigna entre dobles comillas:
+
+// String1.java
+// Primer contacto con los String (cadenas de texto)
+
+
+
+class String1 {
+    public static void main( String args[] ) {
+
+        String saludo = "Hola";
+
+        System.out.print( "El saludo es... " );
+        System.out.println( saludo );
+
+    }
+}
+Podemos "concatenar" cadenas (juntar dos cadenas para dar lugar a una nueva)
+ con el signo +, el mismo que usamos para sumar números. Es frecuente utilizarlo 
+para escribir varias cosas en una misma frase:
+
+// String2.java
+// Primer contacto con los String: concatenación
+
+
+
+class String2 {
+    public static void main( String args[] ) {
+
+        String saludo = "Hola " + "tú";
+        System.out.println( "El saludo es... " + saludo );
+
+    }
+}
+Para comprobar si una cadena de texto tiene un cierto valor o no, podemos emplear los 
+símbolos "==" y "!=", igual que con los números:
+
+// String3.java
+// Tercer contacto con los String: comparación
+
+
+
+
+class String3 {
+    public static void main( String args[] ) {
+
+        String saludo = "Hola";
+
+        if (saludo == "Hola")
+            System.out.println( "El saludo es Hola" );
+        else
+            System.out.println( "El saludo no es Hola" );
+
+    }
+}
+
+
+Por otra parte, existe una serie de "operaciones con nombre" (también llamadas "métodos") 
+que podemos aplicar a una cadena. Vamos a ver un ejemplo de algunas de las más frecuentes
+ y luego detallaremos un poco:
+
+// String4.java
+// Ejemplo más detallado de uso de String
+
+
+
+
+import java.util.Scanner;
+
+class String4 {
+    public static void main( String args[] ) {
+
+        // Forma "sencilla" de dar un valor
+        String texto1 = "Hola";
+
+        // Declarar y dar valor usando un "constructor"
+        String texto2 = new String("Prueba");
+
+        // Declarar sin dar valor
+        String resultado;
+
+        // Manipulaciones básicas
+        System.out.print( "La primera cadena de texto es: " );
+        System.out.println( texto1 );
+
+        resultado = texto1 + texto2;
+        System.out.println( "Si concatenamos las dos: " +  resultado);
+
+        resultado = texto1  + 5 + " " + 23.5 + '.';
+        System.out.println( "Podemos concatenar varios: " +  resultado);
+        System.out.println( "La longitud de la segunda es: "
+            + texto2.length() );
+        System.out.println( "La segunda letra de texto2 es: "
+            + texto2.charAt(1) );
+
+        // En general, las operaciones no modifican la cadena
+        texto2.toUpperCase();
+        System.out.println( "texto2 no ha cambiado a mayúsculas: " + texto2 );
+        resultado = texto2.toUpperCase();
+        System.out.println( "Ahora sí: " + resultado );
+
+        // Podemos extraer fragmentos
+        resultado = texto2.substring(2,5);
+        System.out.println( "Tres letras desde la posición 2: " + resultado );
+
+        // Y podemos comparar cadenas
+        System.out.println( "Comparamos texto1 y texto2: "
+            + texto1.compareTo(texto2) );
+        if (texto1.compareTo(texto2) < 0)
+            System.out.println( "Texto1 es menor que texto2" );
+
+        // Finalmente, pedimos su nombre completo al usuario
+        System.out.print( "¿Cómo te llamas? ");
+        Scanner teclado = new Scanner(System.in);
+        String nombre = teclado.nextLine();
+        System.out.println( "Hola, " + nombre);
+
+        // O podemos bien leer sólo la primera palabra
+        System.out.print( "Teclea varias palabras y espacios... ");
+        String primeraPalabra = teclado.next();
+        System.out.println( "La primera es " + primeraPalabra);
+
+    }
+}
+Vamos a ver los detalles más importantes:
+
+String texto1 = "Hola"; es la forma normal de dar valor a una variable que 
+vaya a guardar cadenas de texto.
+String texto2 = new String("Prueba"); es una forma alternativa de dar el 
+valor inicial a una variable de tipo String. Parece una manera más rebuscada,
+ pero es un tipo de construcción muy habitual en Java. Más adelante hablaremos 
+de "clases" y veremos el motivo de escribir ese tipo de órdenes.
+String resultado; es la forma de crear una variable que guardará cadenas, pero
+ cuyo valor no se conoce aún.
+resultado = texto1 + texto2; Una cadena se puede crear "concatenando" otras dos
+ cadenas, como ya hemos visto.
+resultado = texto1 + 5 + " " + 23.5 + '.'; Si uno de los datos es numérico,
+ se convertirá a la expresión de cadena equivalente para poderlo concatenar.
+texto2.length() devuelve un número, la cantidad de letras que hay en la cadena
+ de texto que se haya guardado dentro de la variable "texto2". Será muy habitual
+ usar esa longitud para recorrer la cadena de texto letra a letra.
+texto2.charAt(1) permite obtener el carácter que se encuentra en una cierta
+ posición, en este caso la segunda (porque la primera posición es la número cero).
+texto2.toUpperCase(); crea una copia de una cadena de texto y la convierte 
+a mayúsculas, pero su valor se pierde si no se vuelca a otra variable o se
+ muestra directamente con una orden "print". La forma correcta será resultado
+ = texto2.toUpperCase();
+if (texto1.compareTo(texto2) > 0) permite ver si una cadena es "menor" que otra, 
+es decir, si aparecería antes en un diccionario. Si texto1 es "menor" que texto2,
+ se obtendría un valor negativo; por el contrario, si texto1 es "mayor" que texto2,
+ se obtendría un valor positivo.
+String nombre = teclado.nextLine(); permite leer toda una frase desde teclado
+ usando un Scanner y guardarla en una cadena.
+String primeraPalabra = teclado.next(); lee desde teclado pero sólo hasta encontrar
+ un espacio en blanco (o el final de la línea porque se pulse Intro, 
+lo que primero ocurra).
+Una lista un poco más detallada de los "métodos" (operaciones con nombre) que 
+se pueden aplicar sobre una cadena podría ser::
+
+Método	Cometido
+length()	Devuelve la longitud (número de caracteres) de la cadena
+charAt (int pos)	Devuelve el carácter que hay en una cierta posición
+toLowerCase()	Devuelve la cadena convertida a minúsculas
+toUpperCase()	Devuelve la cadena convertida a mayúsculas
+substring(int desde, int cuantos)	Devuelve una subcadena: varias letras
+ a partir de una posición dada
+replace(char antiguo, char nuevo)	Devuelve una cadena conun carácter
+ reemplazado por otro
+trim()	Devuelve una cadena sin espacios de blanco iniciales ni finales
+startsWith(String subcadena)	Indica si la cadena empieza con una cierta
+ subcadena
+endsWith(String subcadena)	Indica si la cadena termina con una cierta
+ subcadena
+indexOf(String subcadena, [int desde])	Indica la posición en que se encuentra 
+una cierta subcadena (buscando desde el principio, a partir de una posición opcional)
+lastIndexOf(String subcadena, [int desde])	Indica la posición en que se
+ encuentra una cierta subcadena (buscando desde el final, a partir de una
+ posición opcional)
+valueOf( objeto )	Devuelve un String que es la representación como
+ texto del objeto que se le indique (número, boolean, etc.)
+concat(String cadena)	Devuelve la cadena con otra añadida a su final (concatenada) 
+También se pueden concatenar cadenas con "+"
+equals(String cadena)	Mira si las dos cadenas son iguales (lo mismo que "= =")
+equals-IgnoreCase( String cadena)	Comprueba si dos cadenas son iguales,
+ pero despreciando las diferencias entre mayúsculas y minúsculas
+compareTo(String cadena2)	Compara una cadena con la otra
+ (devuelve 0 si son iguales, negativo si la cadena es "menor" 
+que cadena2 y positivo si es "mayor").
+En ningún momento estamos modificando el String de partida.
+ Eso sí, en muchos de los casos creamos un String modificado
+ a partir del original.
+
+El método "compareTo" se basa en el orden lexicográfico: una cadena
+ que empiece por "A" se considerará "menor" que otra que empiece por
+ la letra "B"; si la primera letra es igual en ambas cadenas,
+ se pasa a comparar la segunda, y así sucesivamente. Las mayúsculas 
+y minúsculas se consideran diferentes.
+
+Ejercicio propuesto 7.3.1.1: Crea un programa que escriba un 
+triángulo con las letras de tu nombre, mostrando primero la primera 
+letra, luego las dos primeras y así sucesivamente, hasta llegar 
+al nombre completo, como en este ejemplo:
+
+N
+Na
+Nac
+Nach
+Nacho
+(Pista: tendrás que usar "substring" y un bucle "for")
+
+Ejercicio propuesto 7.3.1.2: Crea un programa que pida su nombre al usuario
+ y lo escriba con un espacio entre cada par de letras. Por ejemplo, a partir
+ de "Nacho" escribiría "N a c h o " (Pista: tendrás que usar "charAt" y un bucle "for")
+
+Ejercicio propuesto 7.3.1.3: Crea un programa que pida su nombre al usuario
+ y lo escriba con al revés. Por ejemplo, a partir de "Nacho" escribiría "ohcaN".
+
+Ejercicio propuesto 7.3.1.4: Crea un programa que pida su nombre al usuario
+ y lo escriba con la primera letra en mayúsculas y el resto en minúsculas. 
+Por ejemplo, a partir de "nAcho" escribirá "Nacho".
+
+Ejercicio propuesto 7.3.1.5: Crea un programa que pida su nombre al usuario
+ tantas veces como sea necesario, hasta que escriba "nacho" (o el nombre que
+ tú prefijes en el programa). Deberá permitir que ese nombre se introduzca 
+tanto en mayúsculas como en minúsculas. Cuando introduzca el nombre correcto,
+ se le saludará y terminará el programa.
+
+7.3.2. StringBuilder
+Por su parte, los métodos básicos de un StringBuilder, que representa una 
+cadena de texto modificable, son:
+
+Método	Cometido
+length()	Devuelve la longitud (número de caracteres) de la cadena
+setLength()	Modifica la longitud de la cadena (la trunca si hace falta)
+charAt (int pos)	Devuelve el carácter que hay en una cierta posición
+setCharAt(int pos, char letra)	Cambia el carácter que hay en una cierta posición
+toString()	Devuelve el StringBuilder convertido en String
+reverse()	Cambia el orden de los caracteres que forman la cadena
+append( objeto )	Añade otra cadena, un número, etc. al final de la cadena
+insert(int pos, objeto)	Añade otra cadena, un número, etc. en una cierta posición
+Un ejemplo de su uso sería:
+
+// EjemploStringBuilder.java
+// Aplicación de ejemplo con StringBuilder
+
+
+
+
+
+class EjemploStringBuilder {
+    public static void main( String args[] ) {
+
+        StringBuilder texto3 = new StringBuilder("Otra prueba");
+
+        texto3.append(" mas");
+        System.out.println( "Texto 3 es: " + texto3 );
+        texto3.insert(2, "1");
+        System.out.println( "Y ahora es: " + texto3 );
+        texto3.reverse();
+        System.out.println( "Y ahora: " + texto3 );
+
+        System.out.println( "En mayúsculas: " +
+            texto3.toString().toUpperCase() );
+    }
+}
+
+
+El resultado de este programa sería el siguiente:
+
+
+
+Texto 3 es: Otra prueba mas
+Y ahora es: Ot1ra prueba mas
+Y ahora: sam abeurp ar1tO En mayúculas: SAM ABEURP AR1TO
+Ejercicio propuesto 7.3.2.1: Crea un programa que pida su nombre al usuario y 
+lo escriba con al revés, usando un StringBuilder. Por ejemplo, a partir de
+ "Nacho" escribiría "ohcaN".
+
+Ejercicio propuesto 7.3.2.2: Crea un programa que pida su nombre al usuario
+ y cambie la primera letra por una "A", excepto en el caso de que ya fuera una "A",
+ y entonces se convertiría en una "B".
+
+Ejercicio propuesto 7.3.2.3: Crea un programa que pida su nombre al usuario y
+ cree una nueva cadena de texto formada por "Don " seguido del nombre. Hazlo 
+de dos formas: primero concatenando dos cadenas y luego usando "insert" en un
+ StringBuilder.
+
+Ejercicio propuesto 7.3.2.4: Crea un programa que pida su nombre al usuario y
+ convierta las letras impares a mayúsculas y las pares a minúsculas. Por ejemplo,
+ a partir de la cadena "nAcho" se obtendría "NaChO".

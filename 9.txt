@@ -1,0 +1,170 @@
+9. Contacto con las funciones
+
+
+ Curso: Programación en Java
+ 
+
+
+ 
+
+Java
+8. Las Matemáticas Y Java.
+Ya habíamos visto las operaciones matemáticas básicas: suma, resta, división, multiplicación. 
+También alguna menos habitual, como el resto de una división.
+
+Pero existen otras operaciones matemáticas que son muy habituales: raíces cuadradas,
+ potencias, logaritmos, funciones trigonométricas (seno, coseno, tangente), 
+generación de números al azar... Todas estas posibilidades están accesibles a
+ través de la clase java.lang.Math. Vamos a comentar alfabéticamente las más importantes
+ y luego veremos un ejemplo de su uso:
+
+Función	Significado
+abs()	Valor absoluto
+acos()	Arcocoseno
+asin()	Arcoseno
+atan()	Arcotangente entre -PI/2 y PI/2
+atan2( , )	Arcotangente entre -PI y PI
+ceil()	Entero mayor más cercano
+cos(double)	Coseno
+exp()	Exponencial
+floor()	Entero menor más cercano
+log()	Logaritmo natural (base e)
+max( , )	Máximo de dos valores
+min( , )	Mínimo de dos valores
+pow( , )	Primer número elevado al segundo
+random()	Número aleatorio (al azar) entre 0.0 y 1.0
+rint(double)	Entero más próximo
+round()	Entero más cercano (redondeo de la forma habitual)
+sin(double)	Seno
+sqrt()	Raíz cuadrada
+tan(double)	Tangente
+toDegrees(double)	Pasa de radianes a grados (a partir de Java 2)
+toRadians()	Pasa de grados a radianes (a partir de Java 2)
+También hay disponibles dos constantes: PI (relación entre el diámetro de una 
+circunferencia y su longitud) y E (base de los logaritmos naturales).
+
+Las funciones trigonométricas (seno, coseno, tangente, etc) miden en radianes, 
+no en grados, de modo que más de una vez deberemos usar "toRadians" y "toDegrees"
+ si nos resulta más cómodo pensar en grados.
+
+Y un ejemplo, agrupando estas funciones por categorías, sería:
+
+// Matem.java
+// Ejemplo de matemáticas desde Java
+
+
+ 
+class Matem {
+ 
+    public static void main( String args[] ) {
+ 
+        System.out.print( "2+3 es ");
+        System.out.println( 2+3 );
+        System.out.print( "2*3 es ");
+        System.out.println( 2*3 );
+        System.out.print( "2-3 es ");
+        System.out.println( 2-3 );
+        System.out.print( "3/2 es ");
+        System.out.println( 3/2 );
+        System.out.print( "3,0/2 es ");
+        System.out.println( 3.0/2 );
+        System.out.print( "El resto de dividir 13 entre 4 es ");
+        System.out.println( 13%4 );
+ 
+        System.out.print( "Un número al azar entre 0 y 1: ");
+        System.out.println( Math.random() );
+        System.out.print( "Un número al azar entre 50 y 150: ");
+        System.out.println( (int)(Math.random()*100+50) );
+        System.out.print( "Una letra minúscula al azar: ");
+        System.out.println( (char)(Math.random()*26+'a') );
+ 
+        System.out.print( "Coseno de PI radianes: ");
+        System.out.println( Math.cos(Math.PI) );
+        System.out.print( "Seno de 45 grados: ");
+        System.out.println( Math.sin(Math.toRadians(45)) );
+        System.out.print( "Arco cuya tangente es 1: ");
+        System.out.println( Math.toDegrees(Math.atan(1)) );
+ 
+        System.out.print( "Raíz cuadrada de 36: ");
+        System.out.println( Math.sqrt(36) );
+        System.out.print( "Cinco elevado al cubo: ");
+        System.out.println( Math.pow(5.0,3.0) );
+        System.out.print( "Exponencial de 2: ");
+        System.out.println( Math.exp(2) );
+        System.out.print( "Logaritmo de 2,71828: ");
+        System.out.println( Math.log(2.71828) );
+ 
+        System.out.print( "Mayor valor entre 2 y 3: ");
+        System.out.println( Math.max(2,3) );
+        System.out.print( "Valor absoluto de -4,5: ");
+        System.out.println( Math.abs(-4.5) );
+        System.out.print( "Menor entero más cercano a -4,5: ");
+        System.out.println( Math.floor(-4.5) );
+        System.out.print( "Mayor entero más cercano a -4,5: ");
+        System.out.println( Math.ceil(-4.5) );
+        System.out.print( "Redondeando -4,5 con ROUND: ");
+        System.out.println( Math.round(-4.5) );
+        System.out.print( "Redondeando 4,5 con ROUND: ");
+        System.out.println( Math.round(4.5) );
+        System.out.print( "Redondeando -4,6 con RINT: ");
+        System.out.println( Math.rint(-4.6) );
+        System.out.print( "Redondeando -4,5 con RINT: ");
+        System.out.println( Math.rint(4.5) );
+ 
+    }
+ 
+}
+Su resultado es:
+
+2+3 es 5
+2*3 es 6
+2-3 es -1
+3/2 es 1
+3,0/2 es 1.5
+El resto de dividir 13 entre 4 es 1
+Un número al azar entre 0 y 1: 0.9775498588615054
+Un número al azar entre 50 y 150: 71
+Una letra minúscula al azar: u
+Coseno de PI radianes: -1.0
+Seno de 45 grados: 0.7071067811865475
+Arco cuya tangente es 1: 45.0
+Raíz cuadrada de 36: 6.0
+Cinco elevado al cubo: 125.0
+Exponencial de 2: 7.38905609893065
+Logaritmo de 2,71828: 0.999999327347282
+Mayor valor entre 2 y 3: 3
+Valor absoluto de -4,5: 4.5
+Menor entero más cercano a -4,5: -5.0
+Mayor entero más cercano a -4,5: -4.0
+Redondeando -4,5 con ROUND: -4
+Redondeando 4,5 con ROUND: 5
+Redondeando -4,6 con RINT: -5.0
+Redondeando -4,5 con RINT: 4.0
+Ejercicio propuesto 8.1: Crea un programa que muestre en pantalla el resultado 
+de lanzar dos dados (dos números del 1 al 6).
+
+Ejercicio propuesto 8.2: Crea un programa que dé al usuario la oportunidad de
+ adivinar un número del 1 al 100 en un máximo de 6 intentos. En cada pasada
+ deberá avisar de si se ha pasado o se ha quedado corto. El número a adivinar
+ se debe generar al azar.
+
+Ejercicio propuesto 8.3: Crea un programa que cree un array de 5x5 caracteres,
+ lo rellene con puntos en todas las posiciones y luego escriba una O en los
+ puntos que cumplan y = x2. (Nota: puedes calcular el cuadrado usando "pow" 
+o simplemente con "x*x") Deberá verse algo como:
+
+..O..
+.....
+.....
+.O...
+O....
+Ejercicio propuesto 8.4: Crea un programa que calcule y muestre el coseno de 
+los ángulos que van de 0 a 90 grados (ambos inclusive), de 5 en 5 grados.
+
+Ejercicio propuesto 8.5: Crea un programa que pida al usuario un números real 
+"a" y un número entero "b". Deberá calcular la raíz de orden "b" del número
+ "a". Por ejemplo, si los números son 3 y 4, deberas calcular (y mostrar)
+ la raíz cuarta de 3. Deberá repetirse hasta que el número "a" sea 0. Si el 
+números "a" es negativo y Y "b" es par se deberá mostrar un aviso "No se puede 
+calcular esa raíz". (Pista: recuerda que para calcular la raíz "b" del número
+ "a", basta con elevar "a" a "1/b".).

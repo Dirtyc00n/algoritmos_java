@@ -1,0 +1,267 @@
+11. Ficheros
+
+ Curso: Programación en Java
+ 
+
+
+ 
+
+Java
+11. Ficheros
+11.1. ¿Por qué usar ficheros?
+Con frecuencia tendremos que guardar los datos de nuestro programa para poderlos
+ recuperar más adelante. Hay varias formas de hacerlo. Una de ellas son los ficheros,
+ que son relativamente sencillos. Otra forma más eficiente cuando es un volumen de 
+datos muy elevado es usar una base de datos, que veremos más adelante.
+
+11.2. Escribir en un fichero de texto
+Un primer tipo de ficheros, que resulta sencillo de manejar, son los ficheros de texto.
+ Son ficheros que podremos crear desde un programa en Java y leer con cualquier editor
+ de textos, o bien crear con un editor de textos y leer desde un programa en Java,
+ o bien usar un programa tanto para leer como para escribir.
+
+Para manipular ficheros, siempre tendremos que dar tres pasos:
+
+Abrir el fichero
+Guardar datos o leer datos
+Cerrar el fichero
+Hay que recordar siempre esos tres pasos: si no guardamos o leemos datos, 
+no hemos hecho nada útil; si no abrimos fichero, obtendremos un mensaje de error 
+al intentar acceder a su contenido; si no cerramos el fichero (un error frecuente), 
+puede que realmente no se llegue a guardar ningún dato, porque no se vacíe el "buffer" 
+(la memoria intermedia en que se quedan los datos preparados hasta el momento de volcarlos a disco).
+
+En el caso de un fichero de texto, no escribiremos con "println", como hacíamos en pantalla,
+ sino con "write". Cuando queramos avanzar a la línea siguiente, deberemos usar "newLine()":
+
+ficheroSalida.write("Hola");
+ficheroSalida.newLine();
+Por otra parte, para cerrar el fichero (lo más fácil, pero lo que más se suele olvidar), 
+usaremos "close", mientras que para abrir usaremos un BufferedWriter,
+ que se apoya en un FileWriter, que a su vez usa un "File" al que se le indica el nombre del fichero.
+ Es menos complicado de lo que parece:
+
+// FicheroTextoEscribir.java
+
+
+import java.io.*;
+
+class FicheroTextoEscribir
+{
+
+    public static void main( String[] args )
+    {
+        System.out.println("Volcando a fichero de texto...");
+
+        try
+        {
+            BufferedWriter ficheroSalida = new BufferedWriter(
+                new FileWriter(new File("fichero.txt")));
+
+            ficheroSalida.write("Hola");
+            ficheroSalida.newLine();
+            ficheroSalida.write("Este es");
+            ficheroSalida.write(" un fichero de texto");
+            ficheroSalida.newLine();
+
+            ficheroSalida.close();
+        }
+        catch (IOException errorDeFichero)
+        {
+            System.out.println(
+                "Ha habido problemas: " +
+                errorDeFichero.getMessage() );
+        }
+    }
+}
+Como se ve en este ejemplo, todo el bloque que accede al fichero deberá estar encerrado 
+también en un bloque try-catch, para interceptar errores.
+
+Ejercicio propuesto 11.2.1: Crea un programa que pida al usuario que introduzca frases,
+ y guarde todas ellas en un fichero de texto. Deberá terminar cuando el usuario introduzca 
+"fin".
+
+11.3. Leer de un fichero de texto
+Para leer de un fichero de texto usaremos "readLine()", que nos devuelve una cadena de 
+texto (un "string"). Si ese string es null, quiere decir que se ha acabado el fichero 
+y no se ha podido leer nada. Por eso, lo habitual es usar un "while" para leer todo el
+ contenido de un fichero.
+
+Existe otra diferencia con la escritura, claro: no usaremos un BufferedWriter,
+ sino un BufferedReader, que se apoyará en un FileReader:
+
+// FicheroTextoLeer.java
+// Ejemplo de lectura desde un fichero de texto
+
+
+import java.io.*;
+
+class FicheroTextoLeer
+{
+
+    public static void main( String[] args )
+    {
+        // Volcar a un fichero las líneas de otro (de texto)
+        // que empiecen por "A"
+        // Errores: sólo se comprueba si no existe el de origen
+
+        if (! (new File("fichero.txt")).exists() )
+        {
+            System.out.println("No he encontrado fichero.txt");
+            return;
+        }
+
+        System.out.println("Leyendo fichero de texto...");
+
+        try
+        {
+            BufferedReader ficheroEntrada = new BufferedReader(
+                    new FileReader(new File("fichero.txt")));
+
+            String linea=null;
+            while ((linea=ficheroEntrada.readLine()) != null) {
+                System.out.println(linea);
+            }
+
+            ficheroEntrada.close();
+        }
+        catch (IOException errorDeFichero)
+        {
+            System.out.println(
+                "Ha habido problemas: " +
+                errorDeFichero.getMessage() );
+        }
+    }
+}
+Ejercicio propuesto 11.3.1: Crea un programa que muestre el contenido de un fichero de texto,
+ cuyo nombre deberá introducir el usuario. Debe avisar si el fichero no existe.
+
+Ejercicio propuesto 11.3.2: Crea un programa que lea el contenido de un fichero de texto 
+y lo vuelque a otro fichero de texto, pero convirtiendo cada línea a mayúsculas.
+
+Ejercicio propuesto 11.3.3: Crea un programa que pida al usuario el nombre de un fichero
+ y una palabra a buscar en él. Debe mostrar en pantalla todas las líneas del fichero que
+ contengan esa palabra.
+
+11.4. Leer de un fichero binario
+Un fichero "binario" es un fichero que contiene "cualquier cosa", no sólo texto. Podemos 
+leer byte a byte con "read()". Si el dato lo leemos como "int", un valor de "-1"
+ indicará que se ha acabado el fichero.
+
+En este caso, el tipo de fichero que usaremos será un "FileInputStream":
+
+// FicheroBinarioLeer.java
+// Ejemplo de lectura desde un fichero de texto
+// Introducción a Java, Nacho Cabanes
+
+import java.io.*;
+
+class FicheroBinarioLeer
+{
+
+    public static void main( String[] args )
+    {
+        // Cantidad de "a" en un fichero de cualquier tipo
+        // Mirando errores solo con try-catch
+
+        System.out.println("Contando \\"a\\"...");
+        int contador = 0;
+
+        try
+        {
+            FileInputStream ficheroEntrada2 =
+                new FileInputStream(new File("fichero.bin"));
+
+            int dato;
+
+            while ((dato = ficheroEntrada2.read()) != -1) {
+               if (dato == 97) // Codigo ASCII de "a"
+                    contador++;
+            }
+            ficheroEntrada2.close();
+        }
+        catch (Exception errorDeFichero)
+        {
+            System.out.println(
+                "Ha habido problemas: " +
+                errorDeFichero.getMessage() );
+        }
+
+        System.out.println("Cantidad de \\"a\\": " + contador);
+    }
+}
+Este ejemplo cuenta la cantidad de letras "a" que contiene un fichero de cualquier tipo,
+ ya sea de texto, ejecutable, documento creado con un procesador de textos o cualquier otro fichero.
+
+Ejercicio propuesto 11.4.1: Crea un programa que lea el contenido de un fichero binario,
+ mostrando en pantalla todo lo que sean caracteres imprimibles 
+(basta con que sean desde la A hasta la Z, junto con el espacio en blanco).
+
+Ejercicio propuesto 11.4.2: Crea un programa que extraiga el contenido de un fichero binario,
+ volcando a un fichero de texto todo lo que sean caracteres imprimibles 
+(basta con que sean desde la A hasta la Z, junto con el espacio en blanco).
+
+11.5. Leer y escribir bloques en un fichero binario
+Si tenemos que leer muchos datos de un fichero de cualquier tipo, acceder byte a byte
+ puede resultar muy lento. Una alternativa mucho más eficiente es usar un array de bytes. 
+Podemos usar "read", pero indicándole en qué array queremos guardar los datos,
+ desde qué posición del array (que casi siempre será la cero) y qué cantidad de datos:
+
+Si no conseguimos leer tantos datos como hemos intentado, será porque hemos llegado 
+al final del fichero. Por eso, un programa que duplicara ficheros, leyendo cada vez
+ un bloque de 512 Kb podría ser:
+
+// FicheroBinarioEscribir.java
+// Ejemplo de escritura en un fichero binario
+
+
+import java.io.*;
+
+class FicheroBinarioEscribir
+{
+
+    public static void main( String[] args )
+    {
+        // ----------------
+        // Copiar todo un fichero, con bloques de 512 Kb
+        // Sin ninguna comprobación de errores
+
+        System.out.println("Copiando fichero binario...");
+        final int BUFFER_SIZE = 512*1024;
+
+        try
+        {
+            InputStream ficheroEntrada3 = new FileInputStream(
+                    new File("fichero.in"));
+            OutputStream ficheroSalida3 = new FileOutputStream(
+                    new File("fichero2.out"));
+
+            byte[] buf = new byte[BUFFER_SIZE];
+            int cantidadLeida;
+            while ((cantidadLeida = ficheroEntrada3.read(buf, 0,
+                    BUFFER_SIZE)) > 0)
+            {
+                ficheroSalida3.write(buf, 0, cantidadLeida);
+            }
+            ficheroEntrada3.close();
+            ficheroSalida3.close();
+        }
+        catch (Exception errorDeFichero)
+        {
+            System.out.println(
+                "Ha habido problemas: " +
+                errorDeFichero.getMessage() );
+        }
+
+        System.out.println("Terminado!");
+    }
+}
+Ejercicio propuesto 11.5.1: Crea un programa que lea los primeros 54 bytes de un fichero
+ BMP (su cabecera) y compruebe si los dos primeros bytes de esos 54 corresponden a las 
+letras B y M. Si no es así, mostrará el mensaje "No es un BMP válido"; si lo son, escribirá 
+el mensaje "Parece un BMP válido"
+
+Ejercicio propuesto 11.5.2: Crea una versión del ejercicio 11.4.2, leyendo a un array: 
+un programa que extraiga el contenido de un fichero binario, volcando a un fichero de
+ texto todo lo que sean caracteres imprimibles (basta con que sean desde la A hasta la Z,
+ junto con el espacio en blanco).
